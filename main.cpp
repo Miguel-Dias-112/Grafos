@@ -154,30 +154,27 @@ vector<int> coloracaoGulosa(const Grafo& g, int p, int q) {
         // Encontrar menor cor disponível
         corUsada.assign(maiorCor + 2, false);
         
-        // Verificar restrições com vizinhos
+        // Verificar restrições com vizinhos (distância 1)
+        // Para L(p,q)-coloring: |c(u) - c(v)| >= p para vizinhos
         for (int u : g.getVizinhos(v)) {
             if (coloracao[u] != -1) {
-                int diff = abs(coloracao[u] - 0);  // cor sendo testada = 0 inicialmente
-                if (diff < p) {
-                    // Marcar todas as cores que violam p
-                    for (int cor = 0; cor <= maiorCor + 1; cor++) {
-                        if (abs(coloracao[u] - cor) < p) {
-                            if (cor < (int)corUsada.size()) corUsada[cor] = true;
-                        }
+                // Marcar todas as cores que violam a restrição p
+                for (int cor = 0; cor <= maiorCor + 1; cor++) {
+                    if (abs(coloracao[u] - cor) < p) {
+                        if (cor < (int)corUsada.size()) corUsada[cor] = true;
                     }
                 }
             }
         }
         
         // Verificar restrições com vértices a distância 2
+        // Para L(p,q)-coloring: |c(u) - c(v)| >= q para distância 2
         for (int u : g.getDistancia2(v)) {
             if (coloracao[u] != -1) {
-                int diff = abs(coloracao[u] - 0);
-                if (diff < q) {
-                    for (int cor = 0; cor <= maiorCor + 1; cor++) {
-                        if (abs(coloracao[u] - cor) < q) {
-                            if (cor < (int)corUsada.size()) corUsada[cor] = true;
-                        }
+                // Marcar todas as cores que violam a restrição q
+                for (int cor = 0; cor <= maiorCor + 1; cor++) {
+                    if (abs(coloracao[u] - cor) < q) {
+                        if (cor < (int)corUsada.size()) corUsada[cor] = true;
                     }
                 }
             }
@@ -232,9 +229,11 @@ vector<int> coloracaoGulosaRandomizada(const Grafo& g, int p, int q, int alpha,
             // Colorir o vértice escolhido
             vector<bool> corUsada(maiorCor + 2, false);
             
-            // Restrições com vizinhos
+            // Restrições com vizinhos (distância 1)
+            // Para L(p,q)-coloring: |c(u) - c(v)| >= p para vizinhos
             for (int u : g.getVizinhos(escolhido)) {
                 if (coloracao[u] != -1) {
+                    // Marcar todas as cores que violam a restrição p
                     for (int cor = 0; cor <= maiorCor + 1; cor++) {
                         if (abs(coloracao[u] - cor) < p) {
                             if (cor < (int)corUsada.size()) corUsada[cor] = true;
@@ -244,8 +243,10 @@ vector<int> coloracaoGulosaRandomizada(const Grafo& g, int p, int q, int alpha,
             }
             
             // Restrições com distância 2
+            // Para L(p,q)-coloring: |c(u) - c(v)| >= q para distância 2
             for (int u : g.getDistancia2(escolhido)) {
                 if (coloracao[u] != -1) {
+                    // Marcar todas as cores que violam a restrição q
                     for (int cor = 0; cor <= maiorCor + 1; cor++) {
                         if (abs(coloracao[u] - cor) < q) {
                             if (cor < (int)corUsada.size()) corUsada[cor] = true;
