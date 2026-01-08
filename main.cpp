@@ -10,6 +10,7 @@
 #include <iomanip>
 #include <climits>
 #include <cmath>
+#include <numeric>
 
 using namespace std;
 
@@ -160,7 +161,7 @@ vector<int> coloracaoGulosa(const Grafo& g, int p, int q) {
     
     // Ordenar vértices por grau decrescente
     vector<int> vertices(n);
-    for (int i = 0; i < n; i++) vertices[i] = i;
+    iota(vertices.begin(), vertices.end(), 0);
     sort(vertices.begin(), vertices.end(), [&](int a, int b) {
         return g.getGrau(a) > g.getGrau(b);
     });
@@ -205,25 +206,26 @@ vector<int> coloracaoGulosaRandomizada(const Grafo& g, int p, int q, double alph
     for (int iter = 0; iter < iteracoes; iter++) {
         vector<int> coloracao(n, -1);
         int maiorCor = 0;
-        int verticesColoridos = 0;
         
-        while (verticesColoridos < n) {
-            // Criar lista de candidatos (vértices não coloridos)
-            vector<int> candidatos;
-            for (int v = 0; v < n; v++) {
-                if (coloracao[v] == -1) candidatos.push_back(v);
-            }
-            
-            // Ordenar por grau
-            sort(candidatos.begin(), candidatos.end(), [&](int a, int b) {
-                return g.getGrau(a) > g.getGrau(b);
-            });
-            
+        // Inicializar candidatos e ordenar uma vez
+        vector<int> candidatos(n);
+        iota(candidatos.begin(), candidatos.end(), 0);
+        sort(candidatos.begin(), candidatos.end(), [&](int a, int b) {
+            return g.getGrau(a) > g.getGrau(b);
+        });
+        
+        while (!candidatos.empty()) {
             // Construir RCL com base em alpha ∈ [0,1]: top-k por grau
             int k = max(1, (int)ceil(alpha * (double)candidatos.size()));
             k = min(k, (int)candidatos.size());
+            
+            // Escolher aleatoriamente entre os k melhores
             uniform_int_distribution<int> dist(0, k - 1);
-            int escolhido = candidatos[dist(rng)];
+            int idx = dist(rng);
+            int escolhido = candidatos[idx];
+            
+            // Remover o escolhido
+            candidatos.erase(candidatos.begin() + idx);
             
             // Escolher a menor cor válida (≥1) para o escolhido
             auto corValida = [&](int v, int cor) -> bool {
@@ -243,7 +245,6 @@ vector<int> coloracaoGulosaRandomizada(const Grafo& g, int p, int q, double alph
             
             coloracao[escolhido] = corEscolhida;
             maiorCor = max(maiorCor, corEscolhida);
-            verticesColoridos++;
         }
         
         if (maiorCor < melhorMaiorCor) {
