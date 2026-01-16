@@ -150,6 +150,12 @@ Grafo lerGrafoDoArquivo(const string& filename) {
     return g;
 }
 
+int calcularMaiorCor(const vector<int>& coloracao) {
+    int maior = 0;
+    for (int cor : coloracao) maior = max(maior, cor);
+    return maior;
+}
+
 // ============================================================================
 // ALGORITMO GULOSO
 // ============================================================================
@@ -197,62 +203,63 @@ vector<int> coloracaoGulosa(const Grafo& g, int p, int q) {
 // ALGORITMO GULOSO RANDOMIZADO
 // ============================================================================
 
-vector<int> coloracaoGulosaRandomizada(const Grafo& g, int p, int q, double alpha,
-                                       int iteracoes, mt19937& rng) {
+vector<int> coloracaoGulosaRandomizada(const Grafo& g, int p, int q, double alpha, 
+                                       int iteracoes, mt19937& rng, double& mediaOut) {
     int n = g.getNumVertices();
-    vector<int> melhorColoracao;
-    int melhorMaiorCor = INT_MAX;
-    
-    for (int iter = 0; iter < iteracoes; iter++) {
-        vector<int> coloracao(n, -1);
-        int maiorCor = 0;
-        
-        // Inicializar candidatos e ordenar uma vez
+    vector<int> melhorSolucao;
+    int melhorCusto = INT_MAX;
+    double somaCoresTotal = 0;
+
+    for (int i = 0; i < iteracoes; i++) {
+        vector<int> solucaoAtual(n, -1);
         vector<int> candidatos(n);
         iota(candidatos.begin(), candidatos.end(), 0);
-        sort(candidatos.begin(), candidatos.end(), [&](int a, int b) {
-            return g.getGrau(a) > g.getGrau(b);
-        });
-        
+
         while (!candidatos.empty()) {
-            // Construir RCL com base em alpha ∈ [0,1]: top-k por grau
-            int k = max(1, (int)ceil(alpha * (double)candidatos.size()));
-            k = min(k, (int)candidatos.size());
-            
-            // Escolher aleatoriamente entre os k melhores
-            uniform_int_distribution<int> dist(0, k - 1);
-            int idx = dist(rng);
-            int escolhido = candidatos[idx];
-            
-            // Remover o escolhido
-            candidatos.erase(candidatos.begin() + idx);
-            
-            // Escolher a menor cor válida (≥1) para o escolhido
-            auto corValida = [&](int v, int cor) -> bool {
-                if (cor < 1) return false;
-                for (int u : g.getVizinhos(v)) {
-                    if (coloracao[u] != -1 && abs(coloracao[u] - cor) < p) return false;
-                }
-                for (int u : g.getDistancia2(v)) {
-                    if (coloracao[u] != -1 && abs(coloracao[u] - cor) < q) return false;
-                }
-                return true;
-            };
-            int corEscolhida = 1;
-            while (!corValida(escolhido, corEscolhida)) {
-                corEscolhida++;
+            sort(candidatos.begin(), candidatos.end(), [&](int a, int b) {
+                return g.getGrau(a) > g.getGrau(b);
+            });
+
+            // RCL POR VALOR (Critério do PDF)
+            int d_max = g.getGrau(candidatos.front());
+            int d_min = g.getGrau(candidatos.back());
+            double limiar = d_max - alpha * (d_max - d_min);
+
+            vector<int> rcl;
+            for (int v : candidatos) {
+                if (g.getGrau(v) >= limiar) rcl.push_back(v);
+                else break;
             }
-            
-            coloracao[escolhido] = corEscolhida;
-            maiorCor = max(maiorCor, corEscolhida);
+
+            uniform_int_distribution<int> dist(0, rcl.size() - 1);
+            int escolhido = rcl[dist(rng)];
+            candidatos.erase(find(candidatos.begin(), candidatos.end(), escolhido));
+
+            // Atribuição da menor cor válida
+            int cor = 1;
+            while (true) {
+                bool valida = true;
+                for (int v : g.getVizinhos(escolhido))
+                    if (solucaoAtual[v] != -1 && abs(solucaoAtual[v] - cor) < p) { valida = false; break; }
+                if (valida) {
+                    for (int v : g.getDistancia2(escolhido))
+                        if (solucaoAtual[v] != -1 && abs(solucaoAtual[v] - cor) < q) { valida = false; break; }
+                }
+                if (valida) break;
+                cor++;
+            }
+            solucaoAtual[escolhido] = cor;
         }
-        
-        if (maiorCor < melhorMaiorCor) {
-            melhorMaiorCor = maiorCor;
-            melhorColoracao = coloracao;
+
+        int custoAtual = calcularMaiorCor(solucaoAtual);
+        somaCoresTotal += custoAtual;
+        if (custoAtual < melhorCusto) {
+            melhorCusto = custoAtual;
+            melhorSolucao = solucaoAtual;
         }
     }
-    return melhorColoracao;
+    mediaOut = somaCoresTotal / iteracoes;
+    return melhorSolucao;
 }
 
 // ============================================================================
@@ -263,7 +270,6 @@ vector<int> coloracaoGulosaRandomizadaReativa(const Grafo& g, int p, int q,
                                               const vector<double>& alphas,
                                               int iteracoesTotal, int bloco,
                                               mt19937& rng, double& melhorAlpha) {
-    int n = g.getNumVertices();
     int numAlphas = alphas.size();
     
     // Inicializar probabilidades iguais
@@ -288,7 +294,8 @@ vector<int> coloracaoGulosaRandomizadaReativa(const Grafo& g, int p, int q,
                 if (r <= acc) { idxAlpha = i; break; }
             }
             double alphaEscolhido = alphas[idxAlpha];
-            vector<int> coloracao = coloracaoGulosaRandomizada(g, p, q, alphaEscolhido, 1, rng);
+            double mediaIteracao;
+            vector<int> coloracao = coloracaoGulosaRandomizada(g, p, q, alphaEscolhido, 1, rng, mediaIteracao);
             int maiorCor = 0;
             for (int c : coloracao) maiorCor = max(maiorCor, c);
             somaQualidade[idxAlpha] += maiorCor;
@@ -325,12 +332,6 @@ vector<int> coloracaoGulosaRandomizadaReativa(const Grafo& g, int p, int q,
 // ============================================================================
 // FUNÇÕES AUXILIARES
 // ============================================================================
-
-int calcularMaiorCor(const vector<int>& coloracao) {
-    int maior = 0;
-    for (int cor : coloracao) maior = max(maior, cor);
-    return maior;
-}
 
 bool verificarColoracao(const Grafo& g, const vector<int>& coloracao, int p, int q) {
     int n = g.getNumVertices();
@@ -469,9 +470,12 @@ int main(int argc, char* argv[]) {
             break;
             
         case 2:  // Randomizado
-            cout << "\nExecutando algoritmo GULOSO RANDOMIZADO..." << endl;
-            cout << "Alpha: " << alpha << ", Iteracoes: " << iteracoes << endl;
-            coloracao = coloracaoGulosaRandomizada(g, p, q, alpha, iteracoes, rng);
+            {
+                cout << "\nExecutando algoritmo GULOSO RANDOMIZADO..." << endl;
+                double mediaDaExecucao = 0; 
+                coloracao = coloracaoGulosaRandomizada(g, p, q, alpha, iteracoes, rng, mediaDaExecucao);
+                cout << "Media das solucoes nesta execucao: " << mediaDaExecucao << endl;
+            }    
             break;
             
         case 3:  // Reativo
