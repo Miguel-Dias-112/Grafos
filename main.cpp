@@ -216,39 +216,46 @@ vector<int> coloracaoGulosaRandomizada(const Grafo& g, int p, int q, double alph
         iota(candidatos.begin(), candidatos.end(), 0);
 
         while (!candidatos.empty()) {
-            sort(candidatos.begin(), candidatos.end(), [&](int a, int b) {
-                return g.getGrau(a) > g.getGrau(b);
-            });
+            // Calcular custos (menor cor válida) para cada candidato
+            vector<int> custos(n);
+            int c_min = INT_MAX, c_max = 0;
+            
+            for (int v : candidatos) {
+                // Encontrar a menor cor válida para v
+                int cor = 1;
+                while (true) {
+                    bool valida = true;
+                    for (int u : g.getVizinhos(v))
+                        if (solucaoAtual[u] != -1 && abs(solucaoAtual[u] - cor) < p) { valida = false; break; }
+                    if (valida) {
+                        for (int u : g.getDistancia2(v))
+                            if (solucaoAtual[u] != -1 && abs(solucaoAtual[u] - cor) < q) { valida = false; break; }
+                    }
+                    if (valida) break;
+                    cor++;
+                }
+                custos[v] = cor;
+                c_min = min(c_min, cor);
+                c_max = max(c_max, cor);
+            }
 
-            // RCL POR VALOR (Critério do PDF)
-            int d_max = g.getGrau(candidatos.front());
-            int d_min = g.getGrau(candidatos.back());
-            double limiar = d_max - alpha * (d_max - d_min);
+            // RCL BASEADO EM CUSTO DA COR (conforme especificação do PDF)
+            double limiar = c_min + alpha * (c_max - c_min);
 
             vector<int> rcl;
             for (int v : candidatos) {
-                if (g.getGrau(v) >= limiar) rcl.push_back(v);
-                else break;
+                if (custos[v] <= limiar) rcl.push_back(v);
             }
+
+            // Se RCL vazio (pode acontecer por arredondamento), usar primeiro candidato
+            if (rcl.empty()) rcl.push_back(candidatos.front());
 
             uniform_int_distribution<int> dist(0, rcl.size() - 1);
             int escolhido = rcl[dist(rng)];
             candidatos.erase(find(candidatos.begin(), candidatos.end(), escolhido));
 
-            // Atribuição da menor cor válida
-            int cor = 1;
-            while (true) {
-                bool valida = true;
-                for (int v : g.getVizinhos(escolhido))
-                    if (solucaoAtual[v] != -1 && abs(solucaoAtual[v] - cor) < p) { valida = false; break; }
-                if (valida) {
-                    for (int v : g.getDistancia2(escolhido))
-                        if (solucaoAtual[v] != -1 && abs(solucaoAtual[v] - cor) < q) { valida = false; break; }
-                }
-                if (valida) break;
-                cor++;
-            }
-            solucaoAtual[escolhido] = cor;
+            // Atribuir a cor já calculada
+            solucaoAtual[escolhido] = custos[escolhido];
         }
 
         int custoAtual = calcularMaiorCor(solucaoAtual);
@@ -336,10 +343,13 @@ vector<int> coloracaoGulosaRandomizadaReativa(const Grafo& g, int p, int q,
 bool verificarColoracao(const Grafo& g, const vector<int>& coloracao, int p, int q) {
     int n = g.getNumVertices();
     
+    // Validação 1: Tamanho da coloração
     if ((int)coloracao.size() != n) {
         cout << "Erro: tamanho da coloracao difere do numero de vertices." << endl;
         return false;
     }
+    
+    // Validação 2: Todas as cores devem ser positivas
     for (int i = 0; i < n; ++i) {
         if (coloracao[i] < 1) {
             cout << "Erro: cor inválida (não positiva) no vertice " << i << ": " << coloracao[i] << endl;
@@ -347,20 +357,28 @@ bool verificarColoracao(const Grafo& g, const vector<int>& coloracao, int p, int
         }
     }
 
+    // Validação 3: Restrições de distância 1 (vizinhos diretos)
     for (int u = 0; u < n; u++) {
         for (int v : g.getVizinhos(u)) {
-            if (abs(coloracao[u] - coloracao[v]) < p) {
-                cout << "Erro: vertices " << u << " e " << v << " violam p=" << p 
-                     << " (cores: " << coloracao[u] << ", " << coloracao[v] << ")" << endl;
-                return false;
+            if (u < v) {  // Evitar verificação duplicada (grafo não-direcionado)
+                if (abs(coloracao[u] - coloracao[v]) < p) {
+                    cout << "Erro: vertices " << u << " e " << v << " violam p=" << p 
+                         << " (cores: " << coloracao[u] << ", " << coloracao[v] << ")" << endl;
+                    return false;
+                }
             }
         }
-        
+    }
+    
+    // Validação 4: Restrições de distância 2
+    for (int u = 0; u < n; u++) {
         for (int v : g.getDistancia2(u)) {
-            if (abs(coloracao[u] - coloracao[v]) < q) {
-                cout << "Erro: vertices " << u << " e " << v << " a distancia 2 violam q=" << q 
-                     << " (cores: " << coloracao[u] << ", " << coloracao[v] << ")" << endl;
-                return false;
+            if (u < v) {  // Evitar verificação duplicada
+                if (abs(coloracao[u] - coloracao[v]) < q) {
+                    cout << "Erro: vertices " << u << " e " << v << " a distancia 2 violam q=" << q 
+                         << " (cores: " << coloracao[u] << ", " << coloracao[v] << ")" << endl;
+                    return false;
+                }
             }
         }
     }
@@ -419,8 +437,20 @@ void salvarResultadosCSV(const string& filename, const string& instancia,
 // ============================================================================
 
 int main(int argc, char* argv[]) {
+    // Verificar argumentos obrigatórios
+    if (argc < 2) {
+        cerr << "Erro: arquivo de instancia e obrigatorio!" << endl;
+        cerr << "Uso: lpq_coloring <arquivo.col> [algoritmo] [semente] [alpha] [iteracoes] [bloco]" << endl;
+        cerr << endl;
+        cerr << "Exemplo:" << endl;
+        cerr << "  lpq_coloring instancias/test.col 1              (Guloso)" << endl;
+        cerr << "  lpq_coloring instancias/test.col 2 123 0.3 30  (Randomizado)" << endl;
+        cerr << "  lpq_coloring instancias/test.col 3 123 0.3 30 10 (Reativo)" << endl;
+        return 1;
+    }
+    
     // Configuração padrão
-    string instancia = "instancias/le450_5a.col";
+    string instancia = argv[1];
     int p = 2, q = 1;
     int algoritmoEscolhido = 1;  // 1=guloso, 2=randomizado, 3=reativo
     int semente = chrono::system_clock::now().time_since_epoch().count();
@@ -429,7 +459,6 @@ int main(int argc, char* argv[]) {
     int bloco = 30;
     
     // Ler parâmetros da linha de comando
-    if (argc > 1) instancia = argv[1];
     if (argc > 2) algoritmoEscolhido = stoi(argv[2]);
     if (argc > 3) semente = stoi(argv[3]);
     if (argc > 4) alpha = stod(argv[4]);
