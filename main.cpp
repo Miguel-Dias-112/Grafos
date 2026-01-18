@@ -434,6 +434,44 @@ void salvarResultadosCSV(const string& filename, const string& instancia,
     file.close();
 }
 
+void exportarParaCSAcademy(const string& filename,
+                           const Grafo& g,
+                           const vector<int>& coloracao) {
+    ofstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Erro ao exportar para CSAcademy" << endl;
+        return;
+    }
+
+    int n = g.getNumVertices();
+
+    int m = 0;
+    for (int u = 0; u < n; u++) {
+        for (int v : g.getVizinhos(u)) {
+            if (u < v) m++;
+        }
+    }
+
+    file << n << " " << m << endl;
+
+    for (int i = 0; i < n; i++) {
+        file << coloracao[i];
+        if (i + 1 < n) file << " ";
+    }
+    file << endl;
+
+    for (int u = 0; u < n; u++) {
+        for (int v : g.getVizinhos(u)) {
+            if (u < v) {
+                file << (u + 1) << " " << (v + 1) << endl;
+            }
+        }
+    }
+
+    file.close();
+}
+
+
 // ============================================================================
 // MAIN
 // ============================================================================
@@ -556,6 +594,8 @@ int main(int argc, char* argv[]) {
     // Salvar coloração em arquivo
     salvarColoracao("coloracao.txt", coloracao);
     
+    exportarParaCSAcademy("visualizacao_csacademy.txt", g, coloracao);
+
     cout << "\nColoracao salva em 'coloracao.txt'" << endl;
     cout << "Resultados salvos em 'resultados.csv'" << endl;
     cout << "=========================================" << endl;
