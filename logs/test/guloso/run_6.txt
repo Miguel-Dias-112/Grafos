@@ -3,10 +3,10 @@ L(p,q)-COLORING - DCC059 Teoria dos Grafos
 =========================================
 Instancia: instancias\test.col
 Parametros: p=2, q=1
-Semente: -1366539076
+Semente: -925043640
 Grafo com 5 vertices
 Arestas: 4
-Tempo carregamento: 0.0008326s
+Tempo carregamento: 0.0002865s
 
 Executando algoritmo GULOSO...
 
@@ -15,7 +15,7 @@ Coloracao VALIDA!
 
 ========== RESULTADOS ==========
 Maior cor usada: 5
-Tempo execucao: 1.46e-05s
+Tempo execucao: 1.7e-05s
 
 Coloracao salva em 'coloracao.txt'
 Resultados salvos em 'resultados.csv'

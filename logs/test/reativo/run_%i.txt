@@ -6,7 +6,7 @@ Parametros: p=2, q=1
 Semente: 1010
 Grafo com 5 vertices
 Arestas: 4
-Tempo carregamento: 0.0002522s
+Tempo carregamento: 0.0002159s
 
 Executando algoritmo GULOSO RANDOMIZADO REATIVO...
 Iteracoes total: 100, Bloco: 20
@@ -16,7 +16,7 @@ Coloracao VALIDA!
 
 ========== RESULTADOS ==========
 Maior cor usada: 5
-Tempo execucao: 0.0002602s
+Tempo execucao: 0.0002363s
 Melhor alpha encontrado: 0.9
 
 Coloracao salva em 'coloracao.txt'

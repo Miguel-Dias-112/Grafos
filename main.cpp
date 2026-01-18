@@ -402,8 +402,9 @@ void salvarColoracao(const string& filename, const vector<int>& coloracao) {
 
 void salvarResultadosCSV(const string& filename, const string& instancia, 
                          const string& algoritmo, double tempo, int melhorCor,
-                         int semente = 0, double alpha = 0, int iteracoes = 0, 
-                         int bloco = 0) {
+                         double mediaSolucoes,
+                         int semente, double alpha, int iteracoes, int bloco) {
+
     ofstream file(filename, ios::app);
     if (!file.is_open()) {
         cerr << "Erro ao abrir arquivo CSV" << endl;
@@ -413,7 +414,7 @@ void salvarResultadosCSV(const string& filename, const string& instancia,
     // Cabeçalho (se arquivo vazio)
     file.seekp(0, ios::end);
     if (file.tellp() == 0) {
-        file << "data_hora,instancia,algoritmo,alpha,iteracoes,bloco,semente,tempo,melhor_cor" << endl;
+        file << "data_hora,instancia,algoritmo,alpha,iteracoes,bloco,semente,tempo,melhor_cor,media_cor" << endl;
     }
     
     auto now = chrono::system_clock::now();
@@ -427,7 +428,8 @@ void salvarResultadosCSV(const string& filename, const string& instancia,
          << bloco << ","
          << semente << ","
          << fixed << setprecision(4) << tempo << ","
-         << melhorCor << endl;
+         << melhorCor << ","
+         << setprecision(2) << mediaSolucoes << endl;
     
     file.close();
 }
@@ -489,6 +491,7 @@ int main(int argc, char* argv[]) {
     int maiorCor = 0;
     double tempoExecucao = 0;
     double alphaUsado = alpha;
+    double mediaSolucoes = 0.0;
     
     auto inicioExecucao = chrono::high_resolution_clock::now();
     
@@ -496,14 +499,15 @@ int main(int argc, char* argv[]) {
         case 1:  // Guloso
             cout << "\nExecutando algoritmo GULOSO..." << endl;
             coloracao = coloracaoGulosa(g, p, q);
+            maiorCor = calcularMaiorCor(coloracao);
+            mediaSolucoes = maiorCor;
             break;
             
         case 2:  // Randomizado
             {
                 cout << "\nExecutando algoritmo GULOSO RANDOMIZADO..." << endl;
-                double mediaDaExecucao = 0; 
-                coloracao = coloracaoGulosaRandomizada(g, p, q, alpha, iteracoes, rng, mediaDaExecucao);
-                cout << "Media das solucoes nesta execucao: " << mediaDaExecucao << endl;
+                coloracao = coloracaoGulosaRandomizada(g, p, q, alpha, iteracoes, rng, mediaSolucoes);
+                cout << "Media das solucoes nesta execucao: " << mediaSolucoes << endl;
             }    
             break;
             
@@ -513,6 +517,8 @@ int main(int argc, char* argv[]) {
             // Definir lista de alphas (exemplo: 0.1, 0.3, 0.5, 0.7, 0.9)
             vector<double> alphas = {0.1, 0.3, 0.5, 0.7, 0.9};
             coloracao = coloracaoGulosaRandomizadaReativa(g, p, q, alphas, iteracoes, bloco, rng, alphaUsado);
+            maiorCor = calcularMaiorCor(coloracao);
+            mediaSolucoes = maiorCor;
             break;
     }
     
@@ -544,7 +550,8 @@ int main(int argc, char* argv[]) {
     
     salvarResultadosCSV("resultados.csv", nomeInstancia, 
                        nomesAlgoritmos[algoritmoEscolhido],
-                       tempoExecucao, maiorCor, semente, alphaUsado, iteracoes, bloco);
+                       tempoExecucao, maiorCor, mediaSolucoes,
+                       semente, alphaUsado, iteracoes, bloco);
     
     // Salvar coloração em arquivo
     salvarColoracao("coloracao.txt", coloracao);
