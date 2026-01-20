@@ -367,5 +367,107 @@ Para modificar p ou q, edite a função main() em main.cpp:
   int p = 2, q = 1;
 
 ================================================================================
+AUTOMAÇÃO DE EXPERIMENTOS:
+================================================================================
+
+Scripts disponíveis para executar os experimentos de forma automatizada:
+
+--- SCRIPT RÁPIDO (RECOMENDADO) ---
+
+Windows:
+  run_all.bat
+
+Executa automaticamente todos os experimentos para instancias\test.col:
+  - 10x Guloso (sementes 1-10)
+  - 10x Randomizado α=0.1 (30 iterações)
+  - 10x Randomizado α=0.3 (30 iterações)
+  - 10x Randomizado α=0.5 (30 iterações)
+  - 10x Reativo (300 iterações, bloco=30)
+
+--- SCRIPT COMPLETO ---
+
+Windows:
+  run_experiments.bat <instancia.col> [alpha1,alpha2,alpha3]
+
+Exemplo:
+  run_experiments.bat instancias\test.col 0.1,0.3,0.5
+
+Linux / macOS:
+  chmod +x run_experiments.sh
+  ./run_experiments.sh <instancia.col> [alpha1,alpha2,alpha3]
+
+Exemplo:
+  ./run_experiments.sh instancias/test.col 0.1,0.3,0.5
+
+================================================================================
+ANÁLISE DE RESULTADOS:
+================================================================================
+
+Script Python para calcular desvios percentuais e gerar tabelas LaTeX:
+
+Uso:
+  python analyze_results.py <arquivo_csv> <instancia> [melhor_conhecido]
+
+Exemplo:
+  python analyze_results.py resultados.csv test 5
+
+O script gera:
+  1. Tabela resumo no console
+  2. Tabela consolidada em LaTeX
+  3. Tabelas individuais (conforme especificação do trabalho):
+     - Desvio da melhor solução
+     - Desvio da média
+     - Tempo médio
+  4. Arquivo tabelas_<instancia>.tex com todas as tabelas
+
+Fórmulas de desvio utilizadas:
+  - Desvio Melhor = ((melhor_encontrada - melhor_conhecida) / melhor_conhecida) * 100%
+  - Desvio Média = ((média_encontrada - melhor_conhecida) / melhor_conhecida) * 100%
+
+================================================================================
+FLUXO DE TRABALHO COMPLETO:
+================================================================================
+
+1. Compilar o programa:
+   g++ -std=c++17 -O2 -Wall main.cpp -o lpq_coloring
+
+2. Executar os experimentos:
+   
+   Windows:
+     run_all.bat
+   
+   Linux:
+     ./run_experiments.sh instancias/test.col 0.1,0.3,0.5
+
+3. Analisar os resultados e gerar tabelas LaTeX:
+   python analyze_results.py resultados.csv test 5
+
+4. Incluir as tabelas no relatório:
+   \input{tabelas_test.tex}
+
+================================================================================
+ARQUIVOS DO PROJETO:
+================================================================================
+
+Código fonte:
+  - main.cpp           : Implementação dos algoritmos
+  - makefile           : Regras de compilação
+
+Scripts de automação:
+  - run_all.bat        : Execução rápida de todos os experimentos (Windows)
+  - run_experiments.bat: Script completo de experimentos (Windows)
+  - run_experiments.sh : Script completo de experimentos (Linux/macOS)
+  - analyze_results.py : Análise de resultados e geração de tabelas LaTeX
+
+Arquivos gerados:
+  - resultados.csv             : Histórico de todos os experimentos
+  - coloracao.txt              : Última coloração gerada
+  - visualizacao_csacademy.txt : Formato para CS Academy Graph Editor
+  - tabelas_<instancia>.tex    : Tabelas LaTeX geradas
+
+Instâncias:
+  - instancias/                : Diretório com arquivos .col
+
+================================================================================
 FIM DO README
 ================================================================================
