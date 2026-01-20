@@ -20,6 +20,41 @@ import csv
 from collections import defaultdict
 from typing import Dict, List, Tuple
 
+# Valores conhecidos (número cromático) para as instâncias DIMACS
+KNOWN_VALUES = {
+    'test': 5,
+    'huck': 11,
+    'david': 11,
+    'anna': 11,
+    'homer': 13,
+    'mulsol.i.1': 49,
+    'mulsol.i.2': 31,
+    'mulsol.i.3': 31,
+    'mulsol.i.4': 31,
+    'mulsol.i.5': 31,
+    'zeroin.i.1': 49,
+    'zeroin.i.2': 30,
+    'zeroin.i.3': 30,
+    'fpsol2.i.1': 65,
+    'fpsol2.i.2': 30,
+    'fpsol2.i.3': 30,
+    'inithx.i.1': 54,
+    'inithx.i.2': 31,
+    'inithx.i.3': 31,
+    'le450_5a': 5,
+    'le450_5b': 5,
+    'le450_5c': 5,
+    'le450_5d': 5,
+    'le450_15a': 15,
+    'le450_15b': 15,
+    'le450_15c': 15,
+    'le450_15d': 15,
+    'le450_25a': 25,
+    'le450_25b': 25,
+    'le450_25c': 25,
+    'le450_25d': 25,
+}
+
 
 def load_results(csv_file: str, instance_filter: str = None) -> List[dict]:
     """Carrega resultados do arquivo CSV."""
@@ -298,7 +333,14 @@ def main():
     
     csv_file = sys.argv[1]
     instance = sys.argv[2]
-    best_known = int(sys.argv[3]) if len(sys.argv) > 3 else None
+    
+    # Usar valor conhecido do dicionário se não for passado como argumento
+    if len(sys.argv) > 3:
+        best_known = int(sys.argv[3])
+    else:
+        best_known = KNOWN_VALUES.get(instance, None)
+        if best_known:
+            print(f"Usando valor conhecido do dicionário: {best_known}")
     
     print(f"Carregando resultados de: {csv_file}")
     print(f"Filtrando por instância: {instance}")
