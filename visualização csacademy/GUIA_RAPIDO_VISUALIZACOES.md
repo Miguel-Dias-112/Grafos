@@ -85,7 +85,7 @@ Processando: anna.col... ✅ 138 vértices, 986 arestas
 Processando: david.col... ✅ 87 vértices, 812 arestas
 Processando: homer.col... ✅ 561 vértices, 3258 arestas
 ...
-RESUMO: 13 ✅ | 0 ❌
+RESUMO: 7 ✅ | 0 ❌
 ```
 
 ### Passo 2: Verificar os arquivos gerados
@@ -132,16 +132,3 @@ print(f"Grafo: {g.number_of_nodes()} vértices, {g.number_of_edges()} arestas")
 - [ ] Usar os arquivos para visualização ou análise
 
 ---
-
-## 🔗 Referências
-
-- **Script:** `gerar_visualizacoes.py`
-- **Guia Completo:** [COMO_GERAR_VISUALIZACOES.md](COMO_GERAR_VISUALIZACOES.md)
-- **Formato DIMACS:** http://lcs.ios.ac.cn/~caisw/Coloring/
-- **CSAcademy:** https://csacademy.com/
-
----
-
-**Status:** ✅ Script testado e funcionando!
-
-13 arquivos de visualização gerados com sucesso.
