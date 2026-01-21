@@ -1,0 +1,23 @@
+=========================================
+L(p,q)-COLORING - DCC059 Teoria dos Grafos
+=========================================
+Instancia: instancias\mulsol.i.1.col
+Parametros: p=2, q=1
+Semente: 10
+Grafo com 197 vertices
+Arestas: 3925
+Tempo carregamento: 0.0055181s
+
+Executando algoritmo GULOSO RANDOMIZADO...
+Media das solucoes nesta execucao: 141.8
+
+Verificando coloracao...
+Coloracao VALIDA!
+
+========== RESULTADOS ==========
+Maior cor usada: 138
+Tempo execucao: 0.900414s
+
+Coloracao salva em 'coloracao.txt'
+Resultados salvos em 'resultados.csv'
+=========================================

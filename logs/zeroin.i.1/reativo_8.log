@@ -1,0 +1,24 @@
+=========================================
+L(p,q)-COLORING - DCC059 Teoria dos Grafos
+=========================================
+Instancia: instancias\zeroin.i.1.col
+Parametros: p=2, q=1
+Semente: 8
+Grafo com 211 vertices
+Arestas: 4100
+Tempo carregamento: 0.0037063s
+
+Executando algoritmo GULOSO RANDOMIZADO REATIVO...
+Iteracoes total: 300, Bloco: 30
+
+Verificando coloracao...
+Coloracao VALIDA!
+
+========== RESULTADOS ==========
+Maior cor usada: 145
+Tempo execucao: 7.23376s
+Melhor alpha encontrado: 0.3
+
+Coloracao salva em 'coloracao.txt'
+Resultados salvos em 'resultados.csv'
+=========================================

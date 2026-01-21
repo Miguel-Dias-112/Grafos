@@ -1,0 +1,23 @@
+=========================================
+L(p,q)-COLORING - DCC059 Teoria dos Grafos
+=========================================
+Instancia: instancias\homer.col
+Parametros: p=2, q=1
+Semente: 2
+Grafo com 561 vertices
+Arestas: 3256
+Tempo carregamento: 0.0036152s
+
+Executando algoritmo GULOSO RANDOMIZADO...
+Media das solucoes nesta execucao: 101.5
+
+Verificando coloracao...
+Coloracao VALIDA!
+
+========== RESULTADOS ==========
+Maior cor usada: 101
+Tempo execucao: 4.94412s
+
+Coloracao salva em 'coloracao.txt'
+Resultados salvos em 'resultados.csv'
+=========================================

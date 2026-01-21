@@ -1,0 +1,23 @@
+=========================================
+L(p,q)-COLORING - DCC059 Teoria dos Grafos
+=========================================
+Instancia: instancias\le450_5a.col
+Parametros: p=2, q=1
+Semente: 9
+Grafo com 450 vertices
+Arestas: 5714
+Tempo carregamento: 0.0082554s
+
+Executando algoritmo GULOSO RANDOMIZADO...
+Media das solucoes nesta execucao: 127.433
+
+Verificando coloracao...
+Coloracao VALIDA!
+
+========== RESULTADOS ==========
+Maior cor usada: 124
+Tempo execucao: 19.3479s
+
+Coloracao salva em 'coloracao.txt'
+Resultados salvos em 'resultados.csv'
+=========================================

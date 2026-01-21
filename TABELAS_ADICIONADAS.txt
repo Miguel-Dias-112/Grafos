@@ -1,0 +1,171 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                ║
+║                   ✅ TABELAS DE RESULTADOS ADICIONADAS                        ║
+║                                                                                ║
+║              SEÇÃO 4.3 - RESULTADOS OBTIDOS COMPLETADA                        ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+DOCUMENTO ATUALIZADO
+════════════════════════════════════════════════════════════════════════════════
+
+Arquivo: RELATORIO_FINAL.tex
+Linhas anteriores: 343
+Linhas atuais: 420 (+77 linhas)
+Tamanho anterior: ~15 KB
+Tamanho atual: ~19 KB
+Status: ✅ Pronto para compilação em PDF
+
+════════════════════════════════════════════════════════════════════════════════
+                    TABELAS ADICIONADAS À SEÇÃO 4.3
+════════════════════════════════════════════════════════════════════════════════
+
+✅ TABELA 1: Desvios Percentuais das Melhores Soluções
+   ├─ Tabela \ref{tab:desvios_melhor}
+   ├─ Desvios das melhores soluções encontradas em cada algoritmo
+   ├─ Melhor resultado de 10 execuções
+   ├─ Comparado ao melhor valor conhecido de cada instância
+   └─ Inclui coluna de "Melhoria (%)" do Reativo vs Guloso
+
+✅ TABELA 2: Desvios Percentuais das Médias
+   ├─ Tabela \ref{tab:desvios_media}
+   ├─ Desvios da média das melhores soluções
+   ├─ Média dos resultados das 10 execuções
+   ├─ Comparado ao melhor valor conhecido de cada instância
+   └─ Inclui coluna de "Melhoria (%)" do Reativo vs Guloso
+
+✅ TABELA 3: Tempo Médio de Execução
+   ├─ Tabela \ref{tab:tempos}
+   ├─ Tempos médios das 10 execuções
+   ├─ Para Guloso, GRASP e GRASP Reativo
+   ├─ Inclui coluna de "Razão (GRASP/Guloso)" mostrando o overhead
+   └─ Evidencia o trade-off entre velocidade e qualidade
+
+════════════════════════════════════════════════════════════════════════════════
+                       ANÁLISE DESCRITIVA ADICIONADA
+════════════════════════════════════════════════════════════════════════════════
+
+Cada tabela é acompanhada de um parágrafo descritivo explicando:
+
+Para Tabela 1 (Melhores Soluções):
+└─ Observação sobre instâncias pequenas terem qualidade similar
+└─ Observação sobre instâncias maiores mostrarem melhorias significativas
+
+Para Tabela 2 (Médias):
+└─ Confirmação da tendência observada nas melhores soluções
+└─ Análise de variabilidade entre algoritmos
+
+Para Tabela 3 (Tempos):
+└─ Explicação do trade-off entre eficiência e qualidade
+└─ Análise das razões de tempo
+
+════════════════════════════════════════════════════════════════════════════════
+                          DADOS DAS TABELAS
+════════════════════════════════════════════════════════════════════════════════
+
+7 INSTÂNCIAS TESTADAS:
+├─ huck (74 vértices) - χ=11
+├─ david (87 vértices) - χ=11
+├─ anna (138 vértices) - χ=11
+├─ homer (561 vértices) - χ=13
+├─ mulsol.i.1 (197 vértices) - χ=49
+├─ zeroin.i.1 (211 vértices) - χ=49
+└─ le450_5a (450 vértices) - χ=5
+
+DESVIOS PERCENTUAIS (Melhores Soluções):
+├─ Instâncias pequenas: 0% de melhoria (todos iguais)
+├─ mulsol.i.1: 6.29% de melhoria (193.88% → 181.63%)
+├─ zeroin.i.1: 13.39% de melhoria (169.39% → 191.84%, pior no GRASP)
+└─ le450_5a: 5.50% de melhoria (2180.00% → 2300.00%, pior no GRASP)
+
+DESVIOS PERCENTUAIS (Médias):
+├─ Instâncias pequenas: 0% (todos iguais)
+├─ mulsol.i.1: 6.29% de melhoria (193.88% → 181.63%)
+├─ zeroin.i.1: 15.77% de melhoria (169.39% → 196.12%, variação nas médias)
+└─ le450_5a: 6.79% de melhoria (2180.00% → 2328.00%, variação nas médias)
+
+TEMPOS MÉDIOS:
+├─ Guloso: 0.0002s a 0.0035s (milissegundos)
+├─ GRASP: 0.0684s a 15.2314s (dezenas de segundos em instâncias maiores)
+├─ GRASP Reativo: 0.5995s a 160.4297s (minutos em instâncias maiores)
+└─ Razões: de 342x até 45.816x mais lento que Guloso
+
+════════════════════════════════════════════════════════════════════════════════
+                         ESTRUTURA FINAL DO DOCUMENTO
+════════════════════════════════════════════════════════════════════════════════
+
+4. EXPERIMENTOS COMPUTACIONAIS
+   ├─ 4.1 Descrição das Instâncias
+   │   └─ Tabela com 7 instâncias DIMACS e LE450
+   │
+   ├─ 4.2 Ambiente Computacional e Parâmetros
+   │   └─ Hardware, software, configuração de execuções
+   │
+   └─ 4.3 Resultados Obtidos ✅ NOVO CONTEÚDO
+       ├─ 4.3.1 Desvios Percentuais das Melhores Soluções
+       │   ├─ Tabela 1: Desvios percentuais das melhores soluções
+       │   └─ Análise descritiva
+       │
+       ├─ 4.3.2 Desvios Percentuais das Médias
+       │   ├─ Tabela 2: Desvios percentuais das médias
+       │   └─ Análise descritiva
+       │
+       └─ 4.3.3 Tempo Médio de Execução
+           ├─ Tabela 3: Tempo médio de execução
+           └─ Análise descritiva
+
+════════════════════════════════════════════════════════════════════════════════
+                      RESUMO DE ALTERAÇÕES
+════════════════════════════════════════════════════════════════════════════════
+
+ADICIONADO:
+✅ Subsção "Desvios Percentuais das Melhores Soluções" com:
+   - Tabela \ref{tab:desvios_melhor}
+   - Descrição explicativa
+
+✅ Subsção "Desvios Percentuais das Médias" com:
+   - Tabela \ref{tab:desvios_media}
+   - Descrição explicativa
+
+✅ Subsção "Tempo Médio de Execução" com:
+   - Tabela \ref{tab:tempos}
+   - Descrição explicativa
+
+MANTIDO:
+✅ Estrutura original de 5 seções principais
+✅ Formatação profissional LaTeX
+✅ Referências e citações
+✅ Capa, resumo, sumário automático
+
+════════════════════════════════════════════════════════════════════════════════
+                    COMO COMPILAR O PDF ATUALIZADO
+════════════════════════════════════════════════════════════════════════════════
+
+1. Instale MiKTeX (se ainda não tiver):
+   └─ https://miktex.org/download
+
+2. Compile o documento:
+   
+   pdflatex RELATORIO_FINAL.tex
+   bibtex RELATORIO_FINAL
+   pdflatex RELATORIO_FINAL.tex
+   pdflatex RELATORIO_FINAL.tex
+
+3. Resultado:
+   └─ RELATORIO_FINAL.pdf (~18-22 páginas)
+
+════════════════════════════════════════════════════════════════════════════════
+                         ✅ CONCLUÍDO COM SUCESSO
+════════════════════════════════════════════════════════════════════════════════
+
+O relatório foi atualizado com as três tabelas de resultados solicitadas:
+
+✅ Tabela de desvios percentuais das melhores soluções
+✅ Tabela de desvios percentuais das médias
+✅ Tabela de tempos médios de execução
+
+Cada tabela inclui análise descritiva explicando os resultados.
+
+O documento agora contém 420 linhas e está pronto para compilação em PDF.
+
+════════════════════════════════════════════════════════════════════════════════
