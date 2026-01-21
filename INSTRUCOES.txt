@@ -1,0 +1,83 @@
+================================================================================
+L(p,q)-COLORING - DCC059 Teoria dos Grafos
+================================================================================
+
+1. COMPILACAO
+-------------
+
+Linux / macOS:
+  g++ -std=c++17 -O2 -Wall main.cpp -o lpq_coloring
+
+  Ou usando o makefile:
+  make
+
+Windows (MinGW):
+  g++ -std=c++17 -O2 -Wall main.cpp -o lpq_coloring.exe
+
+
+2. EXECUCAO
+-----------
+
+Formato geral:
+  Linux:   ./lpq_coloring <arquivo.col> <algoritmo> [semente] [alpha] [iteracoes] [bloco]
+  Windows: lpq_coloring.exe <arquivo.col> <algoritmo> [semente] [alpha] [iteracoes] [bloco]
+
+Parametros:
+  - arquivo.col : arquivo de instancia no formato DIMACS
+  - algoritmo   : 1=Guloso, 2=Randomizado, 3=Reativo
+  - semente     : semente para randomizacao (opcional, usa data/hora se omitido)
+  - alpha       : parametro alpha para RCL (padrao: 0.3)
+  - iteracoes   : numero de iteracoes (padrao: 30)
+  - bloco       : tamanho do bloco para reativo (padrao: 30)
+
+
+3. EXEMPLOS
+-----------
+
+Algoritmo Guloso:
+  Linux:   ./lpq_coloring instancias/huck.col 1
+  Windows: lpq_coloring.exe instancias\huck.col 1
+
+Algoritmo Guloso Randomizado (alpha=0.3, 30 iteracoes, semente 123):
+  Linux:   ./lpq_coloring instancias/huck.col 2 123 0.3 30
+  Windows: lpq_coloring.exe instancias\huck.col 2 123 0.3 30
+
+Algoritmo Guloso Randomizado Reativo (300 iteracoes, bloco=30, semente 123):
+  Linux:   ./lpq_coloring instancias/huck.col 3 123 0.3 300 30
+  Windows: lpq_coloring.exe instancias\huck.col 3 123 0.3 300 30
+
+
+4. SCRIPTS DE AUTOMACAO
+-----------------------
+
+Executar todos os experimentos:
+  Linux:   ./scripts/run_all.sh
+  Windows: scripts\run_all.bat
+
+Executar experimentos para uma instancia:
+  Linux:   ./scripts/run_instance.sh instancias/huck.col
+  Windows: scripts\run_instance.bat instancias\huck.col
+
+Teste rapido de validacao:
+  Linux:   ./scripts/run_quick.sh
+  Windows: scripts\run_quick.bat
+
+
+5. ARQUIVOS DE SAIDA
+--------------------
+
+- resultados.csv             : historico de todas as execucoes
+- coloracao.txt              : ultima coloracao gerada
+- visualizacao_csacademy.txt : formato para visualizacao no CSAcademy
+
+
+6. INSTANCIAS DISPONIVEIS
+-------------------------
+
+Arquivos .col na pasta instancias/ (formato DIMACS):
+- test.col, huck.col, david.col, anna.col, homer.col
+- mulsol.i.1.col, zeroin.i.1.col, fpsol2.i.1.col
+- inithx.i.1.col, le450_5a.col, le450_15a.col, le450_25a.col
+- school1.col
+
+================================================================================
