@@ -1,6 +1,6 @@
 # Makefile para L(p,q)-Coloring
 CXX = g++
-CXXFLAGS = -std=c++17 -O2 -Wall -Wextra
+CXXFLAGS = -std=c++17 -O2 -Wall -Wextra -static
 
 # Programa principal
 TARGET = lpq_coloring
